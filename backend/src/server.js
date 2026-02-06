@@ -22,13 +22,17 @@ app.get("/" ,(req,res)=>{
 const startServer = async()=>{
     try{
 await connectDB();
-      if(ENV.NODE_ENV !== "PRODUCTION"){
+      if(ENV.NODE_ENV !== "production"){
         app.listen(ENV.PORT , ()=>{
             console.log(`Server is running on port ${PORT}`);
         })
       }
     }catch(error){
-   console.error("error startung server" , error);
+   console.error("error starting server" , error);
    process.exit(1);
     }
 }
+
+startServer();
+
+export default app;
