@@ -1,52 +1,38 @@
-import {createContext, useContext} from "react"
-import {useAuth} from "@clerk/clerk-react"
-import AxiosInstance from "../lib/axios";
-
+import { createContext, useEffect } from "react";
+import { useAuth } from "@clerk/clerk-react";
+import axiosInstance from "../lib/axios";
 import toast from "react-hot-toast";
 
+const AuthContext = createContext({});
 
-// in every single rewuest  a tkken is going to sent to the backend 
-const AuthContext =CreateContext();
+export default function AuthProvider({ children }) {
+  const { getToken } = useAuth();
 
-export default function AuthProvider ([children]){
-    const getToken = useAuth() ;
+  useEffect(() => {
+    // setup axios interceptor
 
-
-
-    useEffect (()=> {
-  //setup axios interceptor 
-  const interceptor = AxiosInstance.interceptors.request.use(
-    async(config) =>{
-        try{
-            const token = await getToken();
-            if(token){;
-                config.headers.Authorization = `Bearer ${token}`;
-            }
-        }catch(error){
-                if(error.message?.includes("auth")|| error.message?.includes("token")){
-                    toast.error("Authentication error. Please log in again.");
-                }
-                console.error("Error fetching auth token:", error);
-            }
-            return config;
+    const interceptor = axiosInstance.interceptors.request.use(
+      async (config) => {
+        try {
+          const token = await getToken();
+          if (token) config.headers.Authorization = `Bearer ${token}`;
+        } catch (error) {
+          if (error.message?.includes("auth") || error.message?.includes("token")) {
+            toast.error("Authentication issue. Please refresh the page.");
+          }
+          console.log("Error getting token:", error);
         }
-    ,(error)=>{
-        console.error("axios request failed" , error);
-            return Promise.reject(error);
+        return config;
+      },
+      (error) => {
+        console.error("Axios request error:", error);
+        return Promise.reject(error);
+      }
+    );
 
-        
-    }
-    
-  )
-  // cleaup function to remoce the nerceptor this is w=done to avoid memeory leaka 
-return ()=>{
-    AxiosInstance.interceptors.request.eject(interceptor) ;
+    // cleanup function to remove the interceptor, this is important to avoid memory leaks
+    return () => axiosInstance.interceptors.request.eject(interceptor);
+  }, [getToken]);
 
-
+  return <AuthContext.Provider value={{}}>{children}</AuthContext.Provider>;
 }
-},[getToken])
-return <AuthContext.Provider value = {{}}> {children}</AuthContext.Provider>
-}
-
-
-
