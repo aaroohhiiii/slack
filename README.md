@@ -25,3 +25,6 @@ instead of writing usestate and useeffect to manage states and feuncion we can i
 the server doesnt really know of we are UTHENTICATED OR NOT . 
 SO when we log in along with the request to fetch homeoage daa we send a token wichih. onfirms that are we are suthentiated 
 bb
+
+
+basially we used stream for chat interface . it ia a framwork

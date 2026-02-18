@@ -2,7 +2,9 @@ import React, { useCallback } from 'react'
 import { useSearchParams } from 'react-router';
 import { useChatContext } from 'stream-chat-react'
 import * as Sentry from "@sentry/react";
-const UsersList = () => {
+import { useQuery } from '@tanstack/react-query';
+import { CircleIcon } from 'lucide-react';
+const UsersList = ({ activeChannel }) => {
 const {client} = useChatContext();
 const [_ , setSearchParams] = useSearchParams() ;
 const fetchUsers = useCallback(
@@ -40,9 +42,7 @@ const channel = client.channel("messaging" , channelId , {
   members :[client.user.id , targetUser.id]
 }) ;
 await channel.watch();
-setSearchParams({channel:channel.id}
-
-)
+setSearchParams({channel:channel.id})
 
     }catch(error){
 console.log("error creating dm" , error);

@@ -15,9 +15,6 @@ export const useStreamChat = () =>{
     const {user} = useUser() ;
     const [chatClient , setChatClient] = useState(null) ;
 
-    console.log("🔍 useStreamChat - user:", user?.id);
-    console.log("🔍 useStreamChat - chatClient:", chatClient);
-
     //fetch stream token using react query 
 
     const {data :tokenData , isLoading ,error} = useQuery({
@@ -25,10 +22,6 @@ export const useStreamChat = () =>{
         queryFn : getStreamtoken ,
         enabled: !!user?.id //take a user obje and conve it to boolen
     }) ;
-
-    console.log("🔍 useStreamChat - isLoading:", isLoading);
-    console.log("🔍 useStreamChat - tokenData:", tokenData);
-    console.log("🔍 useStreamChat - error:", error);
 
   useEffect(()=>{
     if(!tokenData?.token || !user) return ;
