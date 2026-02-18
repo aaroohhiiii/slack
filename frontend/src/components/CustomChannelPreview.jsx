@@ -1,14 +1,15 @@
 import React from 'react'
+import { HashIcon } from 'lucide-react';
 
 const CustomChannelPreview = ({channel , setActiveChannel ,activeChannel}) => {
     const isActive = activeChannel && activeChannel.id === channel.id ;
     const isDM = channel.data.member_count ===2 && channel.data.id.includes("user_") ;
     if(isDM) return null ;
 
-    const unreadCount = channel.unreadCount;
+    const unreadCount = channel.countUnread();
   return (
    <button 
-   onClick={setActiveChannel(channel)}
+   onClick={() => setActiveChannel(channel)}
    className={`str-chat__channel-preview-messenger transition-colors flex items-center w-full text-left px-4 py-2 rounded-lg mb-1 font-medium hover:bg-blue-50/80 min-h-9 ${
         isActive
           ? "!bg-black/20 !hover:bg-black/20 border-l-8 border-purple-500 shadow-lg text-blue-900"
