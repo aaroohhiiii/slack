@@ -29,7 +29,7 @@ if (!PUBLISHABLE_KEY) {
   throw new Error('Add your Clerk Publishable Key to the .env file')
 }
 Sentry.init({
-  dsn: "https://2348a616f60acf5c453d5edbe186dafc@o4509637152407552.ingest.de.sentry.io/4510883033776208",
+  dsn: import.meta.env.VITE_SENTRY_DSN,
   integrations: [
     Sentry.reactRouterV7BrowserTracingIntegration({
       useEffect: React.useEffect,

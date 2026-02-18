@@ -9,8 +9,8 @@ export const ENV = {
     STREAM_API_SECRET : process.env.STREAM_API_SECRET || "",
     SENTRY_DSN : process.env.SENTRY_DSN|| "",
     INNGEST_EVENT_KEY : process.env.INNGEST_EVENT_KEY || "",
-    INNGEST_API_KEY : process.env.INNGEST_API_KEY || ""
-
+    INNGEST_API_KEY : process.env.INNGEST_API_KEY || "",
+CLIENT_URL : process.env.CLIENT_URL || "http://localhost:5174"
 }
 
 
