@@ -8,17 +8,17 @@ import { connectDB } from "./config/db.js";
 import {functions , inngest} from "./config/inngest.js";
 import chatRoutes from "./routes/chat.route.js";
 import { serve } from "inngest/express";
+import cors from "cors";
 const app = express();
 const PORT = process.env.PORT || 5001;
 
 //req ath will be availavle in request object 
 app.use(express.json());
+app.use(cors ({origin : "*" , credentials : true})) ;
 app.use(clerkMiddleware())
 
 
-app.get("/debug-sentry" , (req,res)=>{
-    throw new Error("This is a test error for Sentry debugging")
-})
+
 
 app.get("/" ,(req,res)=>{
     res.send("Hello World");

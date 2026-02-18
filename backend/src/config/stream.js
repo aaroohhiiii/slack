@@ -27,11 +27,20 @@ export const deleteStreamUser = async(userId)=>{
 //this function is for authentcation for stream authenctication . stream crates a token t let user know uts authenticated 
 export const generateStreamToken = (userId)=>{
     try{
-         const userIdString = userId.ToString();
-   return streamClient.createToken(userIdString)
+   return streamClient.createToken(userId)
     }catch(error){
         console.log("error generating stream token" , error);
         return null ;
     }
   
+}
+
+export const addUserToPublicChannels = async(newUserId)=>{
+    const publicChannels = await streamClient.queryChannels({discoverable : true})
+   for ( const channel of publicChannels) {
+    await channel.addMembers([newUserId]);
+   }
+    
+
+
 }

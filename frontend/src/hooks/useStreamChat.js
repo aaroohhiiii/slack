@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { StreamChat } from "stream-chat";
 import { useUser } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
-import { getStreamToken } from "../lib/api";
+import getStreamtoken from "../lib/api";
 import * as Sentry from "@sentry/react";
 //WHY ARE W E USING THIS USER IN THR FIRST PLACE . SO USER Cm se each othersgs o chat inr raltime . 
 
@@ -13,40 +13,55 @@ export const useStreamChat = () =>{
 
 
     const {user} = useUser() ;
-    const {chatClient , setChatClient} = useState(null) ;
+    const [chatClient , setChatClient] = useState(null) ;
 
+    console.log("🔍 useStreamChat - user:", user?.id);
+    console.log("🔍 useStreamChat - chatClient:", chatClient);
 
     //fetch stream token using react query 
 
-``
-    const {data :tokenData , isLoading:TokenLoading ,error:tokenError} = useQuery({
+    const {data :tokenData , isLoading ,error} = useQuery({
         queryKey :["streamToken"] ,
-        queryFn : getStreamToken ,
+        queryFn : getStreamtoken ,
         enabled: !!user?.id //take a user obje and conve it to boolen
     }) ;
+
+    console.log("🔍 useStreamChat - isLoading:", isLoading);
+    console.log("🔍 useStreamChat - tokenData:", tokenData);
+    console.log("🔍 useStreamChat - error:", error);
+
   useEffect(()=>{
+    if(!tokenData?.token || !user) return ;
+    
+    let client;
+    
 const initChat = async ()=>{
-    if(!tokenData?.token || !user)return ;
     try {
-        const client = StreamChat.getInstance(STREAM_API_KEY) ;
+        client = StreamChat.getInstance(STREAM_API_KEY) ;
         await client.connectUser({
-id : user.id,
-name :user.fullName ,
-image : user.imageUrl
-        }
+            id : user.id,
+            name :user.fullName ,
+            image : user.imageUrl
+        },
+        tokenData.token
         )
         setChatClient(client);
     }catch(error){
- console.log("Error initializing Stream Chat:", error);
- Sentry.captureException(error);
+        console.log("Error initializing Stream Chat:", error);
+        Sentry.captureException(error);
     }
 }
+
+initChat();
+
 //cleanup function to disconnect the chat client when the component unmounts or when the user changes
 return ()=>{
-    if(chatClient) chatClient.disconnectUser() ;
-
+    if(client) {
+        client.disconnectUser().catch(console.error);
+        setChatClient(null);
+    }
 }
-  },[tokenData , user,chatClient]) ;
+  },[tokenData?.token, user?.id]) ;
 
-  return {chatzClient , isLoading :tokenLoading , error : tokenError}
+  return {chatClient , isLoading :isLoading , error : error}
 }
