@@ -1,4 +1,4 @@
-## Slack Clone
+##LetsTalk
 
 A full-stack Slack-style collaboration platform with real-time messaging, channels, and video features powered by Stream. This project is built as a learning-focused clone of Slack, showcasing modern web development practices and real-time communication patterns.
 
